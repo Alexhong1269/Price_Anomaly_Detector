@@ -26,7 +26,8 @@ price-anomaly-detector/
 ├── extension/
 │   ├── manifest.json
 │   ├── content.js             # scrapes current price from page
-│   ├── background.js          # runs inference, coordinates
+│   ├── background.js 
+|   ├── scoring.js         
 │   ├── popup.html/js          # shows verdict + price history chart
 │   └── model/                 # bundled model files
 └── README.md
