@@ -2,5 +2,27 @@
     "manifest_version": 3,
     "name": "Price Anomaly Detector",
     "version": "0.1.0",
-    "description": "Flags whether a product's current price is a genuine deal or an inflated-then-discounted price."
+    "description": "Flags whether a product's current price is a genuine deal or an inflated-then-discounted price.",
+
+    "permisions": [
+        "storage"
+    ],
+    "host_permissions": [
+        "https://www.amazon.com/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.amazon.com/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+
+    "background": {
+        "service_worker": "background.js"
+    }
   }
