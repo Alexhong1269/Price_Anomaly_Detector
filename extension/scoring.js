@@ -45,3 +45,5 @@ function getVerdict(currentPrice, historicalPrices) {
         verdict: scoreToVerdict(zScore)
     };
 }
+
+export {verdict};
