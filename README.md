@@ -12,6 +12,7 @@ Retailers often inflate a product's "original" price before applying a discount,
 2. Historical price data for that product is retrieved or estimated
 3. An anomaly-detection model scores the current price against historical patterns
 4. The extension displays a verdict badge: **Good deal**, **Average**, or **Inflated**
+5. The extension also checks a fixed list of supported retailers for the same product (matched by title/brand similarity); if a cheaper listing exists elsewhere, a link to that listing is shown alongside the verdict
 
 ## Project structure
 
@@ -47,6 +48,11 @@ price-anomaly-detector/
 - Baseline: statistical anomaly detection (Z-score / IQR on deviation features) — fast to ship, no training required
 - Upgrade path: Isolation Forest trained in scikit-learn, with scoring logic ported to JavaScript for fully client-side inference (no backend required)
 
+**Cross-site comparison**
+- Separate from the historical-price anomaly check: this compares the same product's price *across* a fixed list of supported retailers (e.g., Amazon, Target, Best Buy) at the current point in time
+- Product matching is done by title/brand text similarity (fuzzy match), not by a hard identifier like UPC
+- If a cheaper listing is found on a supported site, the extension surfaces a link to that listing alongside the deal verdict, so the user can jump straight to the cheaper option
+
 ## Roadmap
 
 - [ ] MVP: statistical baseline detector on one shopping site (e.g., Amazon)
@@ -54,6 +60,8 @@ price-anomaly-detector/
 - [ ] Historical price chart in popup
 - [ ] Upgrade to Isolation Forest model
 - [ ] Expand to additional shopping sites
+- [ ] Cross-site product matching (title/brand fuzzy match) across supported retailers
+- [ ] Show link to cheaper listing on another supported site when found
 - [ ] Optional: local price-logging to improve coverage over time
 
 ## Status
