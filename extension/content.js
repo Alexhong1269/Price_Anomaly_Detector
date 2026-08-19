@@ -58,3 +58,8 @@ function getProductTitle() {
         }
     );
  }
+
+ const scraped = scrapeProductInfo();
+ if (scraped) {
+    sendToBackground(scraped)
+ }
