@@ -1,0 +1,6 @@
+{
+    "manifest_version": 3,
+    "name": "Price Anomaly Detector",
+    "version": "0.1.0",
+    "description": "Flags whether a product's current price is a genuine deal or an inflated-then-discounted price."
+  }
