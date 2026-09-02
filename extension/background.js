@@ -1,4 +1,5 @@
 import {getVerdict} from "./scoring.js";
+import { getHistoricalPrices } from "./historyLookup.js";
 
 //parse the price text
 function parsePriceText(priceText) {
@@ -7,31 +8,37 @@ function parsePriceText(priceText) {
     return Number.isNaN(value) ? null : value;
 }
 
+async function handleProductScraped(productInfo, sendResponse) {
+    const {title, priceText, url} = productInfo;
+
+    const currentPrice = parsePriceText(priceText);
+    if (currentPrice === null) {
+        console.log("[PriceAnomalyDetector] Could not parse Price:", priceText);
+        sendResponse({ status: "error", reason: "unparseable_price" });
+        return;
+    }
+
+    const historicalPrices = await getHistoricalPrices(productInfo);
+    const result = getVerdict(currentPrice, historicalPrices);
+    console.log("[PriceAnomalyDetector] Verdict:", result)
+
+    sendResponse({
+        status: "ok",
+        title,
+        url,
+        currentPrice,
+        zScore: result.zScore,
+        verdict: result.verdict
+    });
+}
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.type == "PRODUCT_SCRAPPED") {
-        const {title, priceText, url} = message.payload;
+    if (message.type === "PRODUCT_SCRAPPED") {
         console.log("[PriceAnomalyDetector] Received from content script:", message.payload);
+        handleProductScraped(message.payload, sendResponse)
 
-        const currentPrice = parsePriceText(priceText);
-        if (currentPrice === null){
-            console.log("[PriceAnomalyDetector] could not parse price:", priceText);
-            sendResponse({status: "error", reason: "unparseable_price"});
-            return true;
-        } 
 
-        const result = getVerdict(currentPrice);
-        console.log("[PriceAnomalyDetector] Verdict:", result);
-
-        sendResponse({
-            status: "ok",
-            title,
-            url,
-            currentPrice,
-            zScore: result.zScore,
-            verdict: result.verdict
-        });
-
-        return true;    
+        return true;
     }
 
 });
