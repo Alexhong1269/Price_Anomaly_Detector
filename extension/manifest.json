@@ -8,8 +8,7 @@
         "storage"
     ],
     "host_permissions": [
-        "https://www.amazon.com/*",
-        "https://api.keepa.com/*"
+        "https://www.amazon.com/*"
     ],
     "content_scripts": [
         {
