@@ -13,11 +13,6 @@ function getRetailerFromURL(url) {
     return "unsupported";
 }
 
-//Will call the Keepa API
-async function getAmazonHistory(productInfo) {
-    console.log("[PriceAnomanlyDetector] (stub) Would call Keepa API for:", productInfo.title);
-    return [200, 195, 205, 210, 190, 198, 202]
-}
 
 async function getScrapedHistory(productInfo, retailer) {
     console.log(`[PriceAnomalyDetector] (stub) Would query our own ${retailer} price history for:`, productInfo.title);
@@ -29,7 +24,6 @@ async function getHistoricalPrices(productInfo) {
 
     switch (retailer) {
         case "amazon":
-            return getAmazonHistory(productInfo);
         case "target":
         case "bestbuy":
             return getScrapedHistory(productInfo, retailer);
