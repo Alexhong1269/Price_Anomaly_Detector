@@ -19,14 +19,17 @@ Retailers often inflate a product's "original" price before applying a discount,
 ```
 price-anomaly-detector/
 ├── data/
-│   ├── scraper/              # collects historical price data
-│   └── training/              # scripts/notebooks for model training
+│   ├── schema.sql             # shared storage schema for scraped price data
+│   ├── scraper/                # collects historical price data
+│   └── training/                # scripts/notebooks for model training
 ├── model/
 │   └── model.json + weights   # exported model artifacts
 ├── extension/
 │   ├── manifest.json
 │   ├── content.js             # scrapes current price from page
 │   ├── background.js          # runs inference, coordinates
+│   ├── scoring.js             # Z-score anomaly-detection logic
+│   ├── historyLookup.js       # routes to our own scraper data per retailer
 │   ├── popup.html/js          # shows verdict + price history chart
 │   └── model/                 # bundled model files
 └── README.md
@@ -36,7 +39,7 @@ price-anomaly-detector/
 
 **Data**
 - Starting point: a public price-history dataset (e.g., a Kaggle e-commerce pricing dataset) to bootstrap a working baseline
-- Future: a lightweight scraper to log price snapshots over time for products visited, improving coverage with use
+- Self-collected going forward: our own scraper logs price snapshots over time for every supported retailer, Amazon included. (Third-party price-history APIs were considered - Keepa's API has no free tier, and Canopy API's free tier doesn't expose historical price data, current price only - so self-collection covers all retailers uniformly.)
 
 **Features**
 - Deviation from rolling 30/90-day average price
@@ -52,6 +55,10 @@ price-anomaly-detector/
 - Separate from the historical-price anomaly check: this compares the same product's price *across* a fixed list of supported retailers (e.g., Amazon, Target, Best Buy) at the current point in time
 - Product matching is UPC-first: if a UPC/EAN is available for a listing, it's used to find exact matches on other retailers; if UPC isn't available (common for private-label items, bundles, or some marketplace listings), the extension falls back to title/brand text similarity (fuzzy match)
 - If a cheaper listing is found on a supported site, the extension surfaces a link to that listing alongside the deal verdict, so the user can jump straight to the cheaper option
+
+**Price history graph**
+- Shown in the popup alongside the deal verdict: a line chart of the product's price over time, using the same historical price data (from our own scraper, via `historyLookup.js`) that feeds the Z-score calculation
+- Lets the user visually confirm the verdict rather than just trusting a badge — e.g., seeing the current price plotted against a spike/dip pattern makes an "Inflated" or "Good deal" verdict easier to trust at a glance
 
 ## Roadmap
 
