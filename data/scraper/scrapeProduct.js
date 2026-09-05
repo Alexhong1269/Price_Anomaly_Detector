@@ -63,7 +63,13 @@ async function scrapeProductPage(url) {
   const priceText = extractPriceText($);
 
   if (!title || !priceText) {
+    // TEMPORARY DEBUG: save the raw HTML so we can inspect what Amazon
+    // actually sent back (e.g. a CAPTCHA/bot-check page instead of the
+    // real product page). Remove this once selectors are confirmed working.
+    const fs = require("fs");
+    fs.writeFileSync("debug-response.html", html);
     console.log(`[scraper] Could not extract title/price from ${url}`);
+    console.log("[scraper] Saved raw response to debug-response.html for inspection.");
     return null;
   }
 
@@ -114,7 +120,7 @@ async function saveScrapeResult(scraped) {
 
 // --- Manual test run ---
 // Swap in a real Amazon product URL to test against.
-const TEST_URL = "https://www.amazon.com/dp/B08N5WRWNW";
+const TEST_URL = "https://www.amazon.com/Amazon-Basics-Microphone-Podcasting-Adjustable/dp/B0CL9BTQRF/ref=sr_1_8?crid=KHM7N4USMUI1&dib=eyJ2IjoiMSJ9.y5kPw7f2-CS0_aKHoy4d_8hc5NF1biFoeP55h7pm7Q4fhASieeC5yuSPLzkoMQI_Q5CDheozBiPNC4-xjFv5tQjH8exU12KEfMeK-3gY9wYhnJCp9DbYbMfKLwDjfQvTfXJDsE38428_e8Qt478Zk32b4mmZMdgZwHGJphUniW9tm6cP5GhVyXuuVdeRxNLaIUdN9HNJA9gKi7lo242wcOZKzfmMYnWXA7VoKJACswt_lpKDeC016HmYvYbxgnHFfsG5czMHutw_Lp5HwR8v2UoA4WT5Sdqlm197O86AGiI.URo6IRoSgZgKYRLTpTGgKm_6O8UXLhZ5CRfpyfs6vmI&dib_tag=se&keywords=microphone+ball+for+pc&qid=1788634686&sprefix=microphone+ball+for+pc%2Caps%2C140&sr=8-8";
 
 scrapeProductPage(TEST_URL)
   .then((scraped) => {
