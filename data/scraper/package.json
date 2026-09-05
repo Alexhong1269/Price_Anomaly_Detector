@@ -10,6 +10,8 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "cheerio": "^1.2.0"
+        "cheerio": "^1.2.0",
+        "@supabase/supabase-js": "^2.45.0",
+        "dontev": "^16.4.5"
     }
 }
