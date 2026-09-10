@@ -29,6 +29,15 @@ async function searchAmazonByTitle(title) {
 
   const data = await response.json();
 
+  // Our own proxy's error format (e.g. missing secret, bad request) -
+  // different from Canopy's own GraphQL "errors" (plural) format below.
+  // Checking both matters: without this, a proxy-side problem would
+  // silently fall through to "0 results" instead of surfacing clearly.
+  if (data.error) {
+    console.log("[PriceAnomalyDetector] Search proxy returned an error:", data.error);
+    return [];
+  }
+
   if (data.errors) {
     console.log("[PriceAnomalyDetector] Canopy returned errors:", data.errors);
     return [];
