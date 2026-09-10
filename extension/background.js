@@ -1,5 +1,6 @@
 import {getVerdict} from "./scoring.js";
 import { getHistoricalPrices } from "./historyLookup.js";
+import "./canopySearch.js";
 
 //parse the price text
 function parsePriceText(priceText) {

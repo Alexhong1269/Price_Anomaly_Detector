@@ -1,52 +1,29 @@
 // canopySearch.js
-// Searches Canopy API (Amazon product search) for listings matching a
-// given product title. First pass: just fetch and log raw results, so we
-// can confirm the query/response shape before building comparison logic.
+// Searches for Amazon listings matching a given product title. Calls OUR
+// OWN Supabase Edge Function (a proxy) instead of Canopy API directly -
+// the real Canopy API key lives only on the server side (as a Supabase
+// secret) and is never present in this extension's code at all.
 //
 // Canopy is Amazon-only - this can tell us "is there a cheaper Amazon
 // listing of this product?" but not Target/Best Buy. Cross-retailer
 // coverage beyond Amazon is a future expansion.
 
-// Canopy API key - get one from https://canopyapi.co after signing up.
-// Same caveat as any browser-extension-embedded key: this can't be truly
-// hidden at runtime (anyone can read the extension's source), only kept
-// out of git via .gitignore.
-const CANOPY_API_KEY = "YOUR_CANOPY_API_KEY";
-const CANOPY_ENDPOINT = "https://graphql.canopyapi.co/";
+// Our Edge Function's URL. No API key needed here anymore - the proxy
+// handles authenticating to Canopy on its own, server-side.
+const SEARCH_PROXY_URL = "https://riijtwwllykaxlubnnvh.supabase.co/functions/v1/hyper-service";
 
 async function searchAmazonByTitle(title) {
-  const query = `
-    query amazonProductSearch($searchTerm: String!) {
-      amazonProductSearchResults(input: { searchTerm: $searchTerm }) {
-        productResults {
-          results {
-            title
-            brand
-            asin
-            price {
-              display
-            }
-          }
-        }
-      }
-    }
-  `;
-
   let response;
   try {
-    response = await fetch(CANOPY_ENDPOINT, {
+    response = await fetch(SEARCH_PROXY_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${CANOPY_API_KEY}`
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        query,
-        variables: { searchTerm: title }
-      })
+      body: JSON.stringify({ searchTerm: title })
     });
   } catch (err) {
-    console.log("[PriceAnomalyDetector] Canopy request failed:", err.message);
+    console.log("[PriceAnomalyDetector] Search proxy request failed:", err.message);
     return [];
   }
 
@@ -58,7 +35,7 @@ async function searchAmazonByTitle(title) {
   }
 
   const results = data.data?.amazonProductSearchResults?.productResults?.results || [];
-  console.log(`[PriceAnomalyDetector] Canopy found ${results.length} results for "${title}"`);
+  console.log(`[PriceAnomalyDetector] Found ${results.length} results for "${title}"`);
   console.log(results);
   return results;
 }
