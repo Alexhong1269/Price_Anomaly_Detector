@@ -11,6 +11,7 @@
 // Our Edge Function's URL. No API key needed here anymore - the proxy
 // handles authenticating to Canopy on its own, server-side.
 const SEARCH_PROXY_URL = "https://riijtwwllykaxlubnnvh.supabase.co/functions/v1/hyper-service";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LjW6Xoutz2Cs4VM6wQMuVA_Q1UlN1AF";
 
 async function searchAmazonByTitle(title) {
   let response;
