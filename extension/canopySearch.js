@@ -8,9 +8,14 @@
 // listing of this product?" but not Target/Best Buy. Cross-retailer
 // coverage beyond Amazon is a future expansion.
 
-// Our Edge Function's URL. No API key needed here anymore - the proxy
+// Our Edge Function's URL. No CANOPY key needed here anymore - the proxy
 // handles authenticating to Canopy on its own, server-side.
 const SEARCH_PROXY_URL = "https://riijtwwllykaxlubnnvh.supabase.co/functions/v1/hyper-service";
+
+// Supabase itself requires a valid Authorization header to invoke ANY
+// Edge Function, separate from Canopy's key entirely - this is Supabase's
+// own access control on who can call the function at all. This is the
+// "publishable" key (safe to embed client-side, unlike a real secret).
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LjW6Xoutz2Cs4VM6wQMuVA_Q1UlN1AF";
 
 async function searchAmazonByTitle(title) {
@@ -19,7 +24,8 @@ async function searchAmazonByTitle(title) {
     response = await fetch(SEARCH_PROXY_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
       },
       body: JSON.stringify({ searchTerm: title })
     });
@@ -44,7 +50,16 @@ async function searchAmazonByTitle(title) {
     return [];
   }
 
-  const results = data.data?.amazonProductSearchResults?.productResults?.results || [];
+  const results = data.data?.amazonProductSearchResults?.productResults?.results;
+
+  if (!results) {
+    // Neither a recognized error shape nor the expected data shape -
+    // log everything so we can see exactly what came back.
+    console.log("[PriceAnomalyDetector] Unrecognized response shape. Status:", response.status);
+    console.log("[PriceAnomalyDetector] Raw response body:", data);
+    return [];
+  }
+
   console.log(`[PriceAnomalyDetector] Found ${results.length} results for "${title}"`);
   console.log(results);
   return results;
@@ -53,3 +68,8 @@ async function searchAmazonByTitle(title) {
 // --- Manual test run ---
 // Swap in a real product title (or keyword phrase) to test against.
 searchAmazonByTitle("clear phone case");
+
+// TEMPORARY DEBUG: expose on self so it can be called manually from the
+// DevTools console (module-scoped functions aren't console-accessible
+// otherwise). Remove once done debugging.
+self.searchAmazonByTitle = searchAmazonByTitle;
