@@ -4,7 +4,7 @@
     "version": "0.1.0",
     "description": "Flags whether a product's current price is a genuine deal or an inflated-then-discounted price.",
 
-    "permisions": [
+    "permissions": [
         "storage"
     ],
     "host_permissions": [

@@ -46,4 +46,4 @@ function getVerdict(currentPrice, historicalPrices) {
     };
 }
 
-export {verdict};
+export {getVerdict};
