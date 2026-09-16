@@ -9,7 +9,7 @@ function parsePriceText(priceText) {
     return Number.isNaN(value) ? null : value;
 }
 
-async function handleProductScraped(productInfo, currentPrice) {
+async function findCheapterAlternatives(productInfo, currentPrice) {
 
     const results = await searchAmazonByTitle(productInfo.title);
 
