@@ -12,14 +12,14 @@ function standardDeviation(numbers, avg) {
 function computeZScore(currentPrice, historicalPrices) {
     if (!historicalPrices || historicalPrices.length < 2) {
         //not enough history to be meaningful
-        return null
+        return null;
     }
 
     const avg = mean(historicalPrices);
     const stdDev = standardDeviation(historicalPrices, avg);
 
     if (stdDev === 0) {
-        return currentPrice < avg ? Infinity : 0;
+        return currentPrice < avg ? -Infinity : 0;
     }
 
     return (currentPrice - avg) / stdDev;
