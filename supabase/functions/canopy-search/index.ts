@@ -87,6 +87,10 @@ Deno.serve(async (req) => {
 
   const data = await canopyResponse.json();
 
+  if (!canopyResponse.ok) {
+    console.error("Canopy request failed with status: ", canopyResponse.status);
+  }
+
   return new Response(JSON.stringify(data), {
     headers: { ...CORS_HEADERS, "Content-Type": "application/json" }
   });

@@ -61,15 +61,7 @@ async function searchAmazonByTitle(title) {
   }
 
   console.log(`[PriceAnomalyDetector] Found ${results.length} results for "${title}"`);
-  console.log(results);
   return results;
 }
 
-// --- Manual test run ---
-// Swap in a real product title (or keyword phrase) to test against.
-searchAmazonByTitle("clear phone case");
-
-// TEMPORARY DEBUG: expose on self so it can be called manually from the
-// DevTools console (module-scoped functions aren't console-accessible
-// otherwise). Remove once done debugging.
-self.searchAmazonByTitle = searchAmazonByTitle;
+export { searchAmazonByTitle };
