@@ -9,7 +9,7 @@ function parsePriceText(priceText) {
     return Number.isNaN(value) ? null : value;
 }
 
-async function findCheapterAlternatives(productInfo, currentPrice) {
+async function findCheaperAlternative(productInfo, currentPrice) {
 
     const results = await searchAmazonByTitle(productInfo.title);
 
@@ -56,9 +56,9 @@ async function handleProductScraped(productInfo, sendResponse) {
         return;
     }
 
-    const [historicalPrices, cheaperAlternative] = await promise.all([
+    const [historicalPrices, cheaperAlternative] = await Promise.all([
         getHistoricalPrices(productInfo),
-        findCheapterAlternatives(productInfo, currentPrice)
+        findCheaperAlternative(productInfo, currentPrice)
     ]);
 
     const result = getVerdict(currentPrice, historicalPrices);
@@ -77,8 +77,8 @@ async function handleProductScraped(productInfo, sendResponse) {
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.type === "PRODCUT_SCRAPED") {
-        console.log("[PRiceAnomalyDetector] Received from content script:", message.payload);
+    if (message.type === "PRODUCT_SCRAPED") {
+        console.log("[PriceAnomalyDetector] Received from content script:", message.payload);
         handleProductScraped(message.payload, sendResponse);
         return true;
     }
