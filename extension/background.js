@@ -87,6 +87,9 @@ async function handleProductScraped(productInfo, sendResponse) {
     verdict: result.verdict,
     cheaperAlternative
   });
+
+  chrome.storage.local.set({ [url]: fullResult });
+  sendResponse(fullResult);
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
