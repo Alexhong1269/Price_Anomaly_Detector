@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Price Anomaly Detector</title>
+        <link rel="stylesheet" href="popup.css" />
+    </head>
+    <body>
+        <div class="popup-container">
+            <h1 class="app-title">Price Anomaly Detector</h1>
+
+            <!--Shows the Stored Data-->
+            <div id="loading-state" class="state">
+                <p>Loading...</p>
+            </div>
+
+            <!--Shows theres no Data for that product-->
+            <div id="empty-state" class="state hidden">
+                <p>No product data for this page yet.</p>
+                <p class="hint">Visit a supported Amazon product page to see a verdict.</p>
+            </div>
+
+            <!--Main Result Page-->
+            <div id="result-state" class="state hidden">
+                <p id="product-title" class="product-title"></p>
+                <p id="prduct-price" class="product-price"></p>
+
+                <div id="cheaper-section" class="cheaper-section-hidden">
+                    <p class="cheaper-label">Found it cheaper:</p>
+                    <a id="cheaper-link" href="#" target="_blank" rel="noopener">
+                        <span id="cheaper-title" class="cheaper-title"></span>
+                        <span id="cheaper-price" class="cheaper-price"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <script src="popup.js"></script>
+    </body>
+</html>
