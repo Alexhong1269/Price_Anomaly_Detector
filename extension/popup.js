@@ -9,3 +9,11 @@ function showState(stateId) {
     }
 }
 
+function renderResult(result) {
+    document.getElementById("product-title").textContent = result.title;
+    document.getElementById("product-price").textContent = formatPrice(result.currentPrice);
+
+    const badge = document.getElementById("verdict-badge");
+    badge.textContent = result.verdict.place("-", " ")
+    badge.className = "verdict-badge";
+}
