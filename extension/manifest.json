@@ -5,12 +5,18 @@
     "description": "Flags whether a product's current price is a genuine deal or an inflated-then-discounted price.",
 
     "permissions": [
-        "storage"
+        "storage",
+        "activeTab"
     ],
     "host_permissions": [
         "https://www.amazon.com/*",
         "https://riijtwwykaxlubnvh.supabase.co/*"
     ],
+    "action": {
+        "default_popup": "popup.html",
+        "defualt_title": "Price Anomaly Detector"
+
+    },
     "content_scripts": [
         {
             "matches": [
