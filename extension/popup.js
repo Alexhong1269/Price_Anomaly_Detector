@@ -3,8 +3,8 @@ function formatPrice(price) {
 }
 
 function showState(stateId) {
-    const state = ["loading-state", "empty-state", "result-state"];
-    for (const id of state) {
+    const states = ["loading-state", "empty-state", "result-state"];
+    for (const id of states) {
         document.getElementById(id).classList.toggle("hidden", id !== stateId);
     }
 }
