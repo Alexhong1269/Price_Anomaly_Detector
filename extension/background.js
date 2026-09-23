@@ -78,7 +78,7 @@ async function handleProductScraped(productInfo, sendResponse) {
   console.log("[PriceAnomalyDetector] Verdict:", result);
   console.log("[PriceAnomalyDetector] Cheaper alternative:", cheaperAlternative);
 
-  sendResponse({
+  const fullResult = {
     status: "ok",
     title,
     url,
@@ -86,7 +86,7 @@ async function handleProductScraped(productInfo, sendResponse) {
     zScore: result.zScore,
     verdict: result.verdict,
     cheaperAlternative
-  });
+  };
 
   chrome.storage.local.set({ [url]: fullResult });
   sendResponse(fullResult);
