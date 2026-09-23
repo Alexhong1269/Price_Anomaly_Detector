@@ -14,7 +14,7 @@ function renderResult(result) {
     document.getElementById("product-price").textContent = formatPrice(result.currentPrice);
 
     const badge = document.getElementById("verdict-badge");
-    badge.textContent = result.verdict.place("-", " ")
+    badge.textContent = result.verdict.replace("-", " ")
     badge.className = "verdict-badge";
     badge.classList.add(`verdict-${result.verdict}`);
 
