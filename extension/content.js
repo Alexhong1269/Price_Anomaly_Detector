@@ -60,7 +60,7 @@ function sendToBackground(productInfo) {
   chrome.runtime.sendMessage(
       { type: "PRODUCT_SCRAPED", payload: productInfo},
       (response) => {
-          if (crhome.runtime.lastError) {
+          if (chrome.runtime.lastError) {
               //Common during dev: background script not listening yet,
               // or the extension was reloaded and this content script is orphaned
               console.log("[PriceAnomalyDetector] Message Failed:", chrome.runtime.lastError.message);
