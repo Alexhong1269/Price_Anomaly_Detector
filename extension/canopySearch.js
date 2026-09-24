@@ -18,6 +18,29 @@ const SEARCH_PROXY_URL = "https://riijtwwllykaxlubnnvh.supabase.co/functions/v1/
 // "publishable" key (safe to embed client-side, unlike a real secret).
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LjW6Xoutz2Cs4VM6wQMuVA_Q1UlN1AF";
 
+const CACHE_TTL_MS = 60 * 60 * 1000;
+
+function cacheKeyFor(title) {
+  return `canopy_cache:${title}`
+}
+
+async function getCachedResults(title) {
+  const key = cacheKeyFor(title);
+  const stored = await chrome.storage.local.get(key);
+  const entry = stored[key];
+
+  if (!entry) {
+    return null;
+  }
+
+  const age = Date.now() - entry.cachedAt;
+  if (age > CACHE_TTL_MS) {
+    return null;
+  }
+
+  return entry.results;
+}
+
 async function searchAmazonByTitle(title) {
   let response;
   try {
