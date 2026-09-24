@@ -41,6 +41,13 @@ async function getCachedResults(title) {
   return entry.results;
 }
 
+async function setCachedResults(title, results) {
+  const key = cacheKeyFor(title);
+  await chrome.storage.local.set({
+    [key] : { results, cachedAt: Date.now() }
+  })
+}
+
 async function searchAmazonByTitle(title) {
   let response;
   try {
