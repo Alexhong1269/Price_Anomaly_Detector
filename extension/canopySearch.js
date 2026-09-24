@@ -91,6 +91,7 @@ async function searchAmazonByTitle(title) {
   }
 
   console.log(`[PriceAnomalyDetector] Found ${results.length} results for "${title}"`);
+  await setCachedResults(title, results);
   return results;
 }
 
